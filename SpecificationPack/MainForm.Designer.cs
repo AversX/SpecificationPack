@@ -54,7 +54,7 @@
             this.specListBox.Name = "specListBox";
             this.specListBox.Size = new System.Drawing.Size(499, 147);
             this.specListBox.TabIndex = 0;
-            this.specListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.specListBox_DragDrop);
+            this.specListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.SpecListBox_DragDrop);
             this.specListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.specListBox_DragEnter);
             // 
             // label1
@@ -75,7 +75,7 @@
             this.addSpecBtn.TabIndex = 2;
             this.addSpecBtn.Text = "Добавить спецификацию";
             this.addSpecBtn.UseVisualStyleBackColor = true;
-            this.addSpecBtn.Click += new System.EventHandler(this.addSpecBtn_Click);
+            this.addSpecBtn.Click += new System.EventHandler(this.AddSpecBtn_Click);
             // 
             // deleteSpecBtn
             // 

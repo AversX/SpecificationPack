@@ -25,29 +25,46 @@ namespace SpecificationPack
 
         struct Unit
         {
-            public string Group;
-            public string Code;
-            public string Name;
-            public string Manufacture;
-            public CupBoard[] cupBoard;
-            public string Measure;
-            public Color errorColor;
+            private string group;
+            private string code;
+            private string name;
+            private string manufacture;
+            private CupBoard[] cupBoard;
+            private string measure;
+            private Color errorColor;
 
-            public double Count;
-            public string FileName;
+            private double count;
+            private string fileName;
+
+            public string Group { get => group; set => group = value; }
+            public string Code { get => code; set => code = value; }
+            public string Name { get => name; set => name = value; }
+            public string Manufacture { get => manufacture; set => manufacture = value; }
+            public CupBoard[] CupBoard { get => cupBoard; set => cupBoard = value; }
+            public string Measure { get => measure; set => measure = value; }
+            public Color ErrorColor { get => errorColor; set => errorColor = value; }
+            public double Count { get => count; set => count = value; }
+            public string FileName { get => fileName; set => fileName = value; }
         }
 
         public struct CupBoard
         {
-            public double Num;
-            public string fileName;
+            private double num;
+            private string fileName;
+
+            public string FileName { get => fileName; set => fileName = value; }
+            public double Num { get => num; set => num = value; }
         }
 
         public struct GroupUnit
         {
-            public string Group;
-            public string Code;
-            public string Name;
+            private string group;
+            private string code;
+            private string name;
+
+            public string Group { get => group; set => group = value; }
+            public string Code { get => code; set => code = value; }
+            public string Name { get => name; set => name = value; }
         }
 
         public MainForm()
@@ -55,7 +72,7 @@ namespace SpecificationPack
             InitializeComponent();
         }
 
-        private void addSpecBtn_Click(object sender, EventArgs e)
+        private void AddSpecBtn_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Multiselect = true;
@@ -67,7 +84,7 @@ namespace SpecificationPack
             }
         }
 
-        private void specListBox_DragDrop(object sender, DragEventArgs e)
+        private void SpecListBox_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop) && e.Effect == DragDropEffects.Move)
             {
@@ -104,7 +121,7 @@ namespace SpecificationPack
                 Except = loadDataExcept(@"Data\Except.xlsx");
                 for (int i = 0; i < specListBox.Items.Count; i++)
                 {
-                    Units.AddRange(loadDataSpec(specListBox.Items[i].ToString(), i, unionCheckBox.Checked));
+                    Units.AddRange(LoadDataSpec(specListBox.Items[i].ToString(), i, unionCheckBox.Checked));
                 }
                 if (!unionCheckBox.Checked)
                 {
@@ -132,28 +149,28 @@ namespace SpecificationPack
                             if (units[j].Measure.Replace(".", "") == units[i].Measure.Replace(".", ""))
                             {
                                 Unit unit = units[i];
-                                for (int k = 0; k < unit.cupBoard.Length; k++)
+                                for (int k = 0; k < unit.CupBoard.Length; k++)
                                 {
-                                    unit.cupBoard[k].Num += units[j].cupBoard[k].Num;
-                                    if (units[j].cupBoard[k].fileName != null || unit.cupBoard[k].fileName == null)
-                                        unit.cupBoard[k].fileName = units[j].cupBoard[k].fileName;
+                                    unit.CupBoard[k].Num += units[j].CupBoard[k].Num;
+                                    if (units[j].CupBoard[k].FileName != null || unit.CupBoard[k].FileName == null)
+                                        unit.CupBoard[k].FileName = units[j].CupBoard[k].FileName;
                                 }
                                 units.RemoveAt(j);
                                 j--;
-                                unit.errorColor = Color.Empty;
+                                unit.ErrorColor = Color.Empty;
                                 units[i] = unit;
                             }
                             else
                             {
                                 Unit unit = units[j];
-                                unit.errorColor = Color.Yellow;
+                                unit.ErrorColor = Color.Yellow;
                                 units[j] = unit;
                             }
                         }
                         else if (units[i].Name == units[j].Name)
                         {
                             Unit unit = units[j];
-                            unit.errorColor = Color.Magenta;
+                            unit.ErrorColor = Color.Magenta;
                             units[j] = unit;
                         }
 
@@ -165,21 +182,21 @@ namespace SpecificationPack
                             if (Except.Exists(x => x == units[j].Name))
                             {
                                 Unit unit = units[i];
-                                for (int k = 0; k < unit.cupBoard.Length; k++)
+                                for (int k = 0; k < unit.CupBoard.Length; k++)
                                 {
-                                    unit.cupBoard[k].Num += units[j].cupBoard[k].Num;
-                                    if (units[j].cupBoard[k].fileName != null || unit.cupBoard[k].fileName == null)
-                                        unit.cupBoard[k].fileName = units[j].cupBoard[k].fileName;
+                                    unit.CupBoard[k].Num += units[j].CupBoard[k].Num;
+                                    if (units[j].CupBoard[k].FileName != null || unit.CupBoard[k].FileName == null)
+                                        unit.CupBoard[k].FileName = units[j].CupBoard[k].FileName;
                                 }
                                 units.RemoveAt(j);
                                 j--;
-                                unit.errorColor = Color.Empty;
+                                unit.ErrorColor = Color.Empty;
                                 units[i] = unit;
                             }
                             else
                             {
                                 Unit unit = units[j];
-                                unit.errorColor = Color.Red;
+                                unit.ErrorColor = Color.Red;
                                 units[j] = unit;
                             }
                         }
@@ -210,12 +227,12 @@ namespace SpecificationPack
             return units;
         }
 
-        private List<Unit> loadDataSpec(string path, int index, bool union)
+        private List<Unit> LoadDataSpec(string path, int index, bool union)
         {
             List<Unit> units = new List<Unit>();
             DataSet dataSet = new DataSet("EXCEL");
             string connectionString;
-            connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties='Excel 12.0;IMEX=0'";
+            connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties='Excel 12.0;IMEX=1;HDR=NO'";
             OleDbConnection connection = new OleDbConnection(connectionString);
             connection.Open();
 
@@ -227,7 +244,7 @@ namespace SpecificationPack
             adapter.Fill(dataSet);
             connection.Close();
 
-            for (int row = 1; row < dataSet.Tables[0].Rows.Count; row++)
+            for (int row = 0; row < dataSet.Tables[0].Rows.Count; row++)
             {
                 if (dataSet.Tables[0].Rows[row][3].ToString().Length > 0)
                 {
@@ -250,9 +267,9 @@ namespace SpecificationPack
                                 cB[index].Num = double.Parse(dataSet.Tables[0].Rows[row][4].ToString().Trim());
                             }
                             else cB[i].Num = 0;
-                            cB[i].fileName = Path.GetFileNameWithoutExtension(specListBox.Items[i].ToString());
+                            cB[i].FileName = Path.GetFileNameWithoutExtension(specListBox.Items[i].ToString());
                         }
-                        unit.cupBoard = cB;
+                        unit.CupBoard = cB;
                     }
                     unit.Measure = dataSet.Tables[0].Rows[row][5].ToString().Trim();
                     unit.Manufacture = dataSet.Tables[0].Rows[row][6].ToString().Trim();
@@ -365,14 +382,14 @@ namespace SpecificationPack
                 sheet.Cells[i + 2, curColumn - 1] = Units[i].Measure;
                 if (!unionCheckBox.Checked)
                 {
-                    for (int j = 0; j < Units[i].cupBoard.Length; j++)
+                    for (int j = 0; j < Units[i].CupBoard.Length; j++)
                     {
-                        sheet.Cells[i + 2, curColumn + j] = Units[i].cupBoard[j].Num;
+                        sheet.Cells[i + 2, curColumn + j] = Units[i].CupBoard[j].Num;
                         if (curColumn + j > curMaxColumn)
                         {
                             curMaxColumn++;
                             sheet.Cells[1, curMaxColumn].NumberFormat = "#";
-                            sheet.Cells[1, curMaxColumn] = Units[i].cupBoard[j].fileName;
+                            sheet.Cells[1, curMaxColumn] = Units[i].CupBoard[j].FileName;
                         }
                     }
                 }
@@ -410,7 +427,7 @@ namespace SpecificationPack
                         autoFit.NumberFormat = "#,#0.0";
                     }
                     autoFit = (Excel.Range)sheet.Rows[i + 2];
-                    if (Units[i].errorColor != Color.Empty) autoFit.EntireRow.Interior.Color = Units[i].errorColor;
+                    if (Units[i].ErrorColor != Color.Empty) autoFit.EntireRow.Interior.Color = Units[i].ErrorColor;
                     autoFit.EntireRow.AutoFit();
                 }
             }
