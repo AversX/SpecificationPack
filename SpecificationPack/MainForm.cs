@@ -227,7 +227,7 @@ namespace SpecificationPack
             List<Unit> units = new List<Unit>();
             DataSet dataSet = new DataSet("EXCEL");
             string connectionString;
-            connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties='Excel 12.0;IMEX=1;HDR=NO'";
+            connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties='Excel 12.0;HDR=NO'";
             OleDbConnection connection = new OleDbConnection(connectionString);
             connection.Open();
 
@@ -235,7 +235,7 @@ namespace SpecificationPack
             string sheet1 = (string)schemaTable.Rows[0].ItemArray[2];
 
             string select = String.Format("SELECT * FROM [{0}]", sheet1);
-            OleDbDataAdapter adapter = new OleDbDataAdapter(select, connection);
+            OleDbDataAdapter adapter = new OleDbDataAdapter(select, connection); 
             adapter.Fill(dataSet);
             connection.Close();
 
